@@ -1,0 +1,26 @@
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build:
+    name: merge to dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: generate build number
+        uses: einaregilsson/build-number@v2
+        id: buildnumber
+        with:
+          token: ${{ secrets.TOKEN }}
+
+      - name: determine version
+        uses: extenda/actions/conventional-version@v0
+        id: version
+        with:
+          version-suffix: -${{ steps.buildnumber.outputs.build_number }}-${{ github.sha }}
+
+      - name: print version
+        run: echo ${{ steps.version.outputs.version }}

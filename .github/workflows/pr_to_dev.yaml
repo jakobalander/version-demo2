@@ -1,0 +1,20 @@
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  build:
+    name: pull request to dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: determine version
+        uses: extenda/actions/conventional-version@v0
+        id: version
+        with:
+          version-suffix: -${{ github.sha }}
+
+      - name: print version
+        run: echo ${{ steps.version.outputs.version }}
